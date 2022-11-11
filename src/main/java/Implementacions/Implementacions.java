@@ -4,8 +4,10 @@ import Interficies.DAO;
 import Objects.*;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Implementacions implements DAO {
@@ -18,24 +20,32 @@ public class Implementacions implements DAO {
 
     @Override
     public Client cercaClient(String dni, Connection con) {
+        Client c;
         try {
             Statement stmt=con.createStatement();
-            stmt.executeQuery("Select "+dni+" from client");
+            ResultSet rs= stmt.executeQuery("Select "+dni+" from client");
+            rs.getRow();
+
+             c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return null;
+        return c;
     }
     public Client cercaClient(int id, Connection con) {
+        Client c;
         try {
             Statement stmt=con.createStatement();
-            stmt.executeQuery("Select "+id+" from client");
+            ResultSet rs= stmt.executeQuery("Select "+id+" from client");
+            rs.getRow();
+
+            c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return null;
+        return c;
     }
 
 

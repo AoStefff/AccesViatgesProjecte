@@ -14,7 +14,7 @@ public class Main {
 
     static {
         try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/agencia_viatges","postgres","mcgastron99");
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/agencia_viatges","postgres","1234");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -28,19 +28,19 @@ public class Main {
 
         int opcio = 0;
        do{
-           System.out.println("\t1. Iniciar sessió\t\n2. Registrar");
+           System.out.println("\t1. Iniciar sessió\n\t2. Registrar");
            opcio=lec.nextInt();
            lec.nextLine();
            switch (opcio){
                case 1:
-                   System.out.println("Nom: ");
-                   String nom=lec.nextLine();
+
                    System.out.println("Dni del usuari: ");
                    String dni=lec.nextLine();
-                      if(!userExist(dni)){
-
+                      while(!userExist(dni)){
+                          System.out.println("Dni del usuari: ");
+                          dni=lec.nextLine();
                       }
-                      else
+
                    break;
                case 2:
                    System.out.println("Dni del nou usuari");
