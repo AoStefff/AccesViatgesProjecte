@@ -117,7 +117,15 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean createCompra(Compra com, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            stmt.executeUpdate("Insert into compres (id_bitllet,id_viatge,id_client,data_compra,preu,nom_viatger,dni_viatger) values('"+com.getIdBitllet()+"','"+com.getIdViatge()+"','"+com.getIdClient()+"','"+com.getDataCompra()+"','"+com.getPreu()+"','"+com.getNomPassatger()+"','"+com.getDniPassatger()+"')");
+        }
+        catch(Exception a) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -142,7 +150,15 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean createLocalitat(Localitat loc, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            stmt.executeUpdate("Insert into localitats (nom,pais,abreviacio) values('"+loc.getNom()+"','"+loc.getPais()+"','"+loc.getAbreviacio()+"')");
+        }
+        catch(Exception a) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -167,7 +183,15 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean createTransport(Transport tra, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            stmt.executeUpdate("Insert into transport (s_normal,s_preferent,nom) values('"+tra.getsNormal()+"','"+tra.getsPreferent()+"','"+tra.getNom()+"')");
+        }
+        catch(Exception a) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -191,8 +215,16 @@ public class Implementacions implements DAO {
     }
 
     @Override
-    public boolean createTViatge(Viatge via, Connection con) {
-        return false;
+    public boolean createViatge(Viatge via, Connection con) {
+        try {
+            Statement stmt=con.createStatement();
+            stmt.executeUpdate("Insert into viatge (id_origen,id_desti,data,id_transport,habilitat) values('"+via.getIdOrigen()+"','"+via.getIdDesti()+"','"+via.getDataHora()+"','"+via.getIdTransport()+"','"+via.isHabilitat()+"')");
+        }
+        catch(Exception a) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override

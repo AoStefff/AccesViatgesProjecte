@@ -48,7 +48,7 @@ public interface DAO {
     List<Viatge> TotsVia();
     Client cercaViatge(int id, Connection con);
 
-    boolean createTViatge(Viatge via, Connection con);
+    boolean createViatge(Viatge via, Connection con);
     boolean updateViatge(Viatge via, Connection con);
     boolean deleteViatge(Viatge via, Connection con);
 
