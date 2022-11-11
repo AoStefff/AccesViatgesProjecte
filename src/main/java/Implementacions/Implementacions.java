@@ -23,9 +23,9 @@ public class Implementacions implements DAO {
         Client c;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select "+dni+" from client");
+            ResultSet rs= stmt.executeQuery("Select * from client where dni='"+dni+"'");
             rs.getRow();
-
+            rs.next();
              c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"));
         } catch (SQLException e) {
             throw new RuntimeException(e);

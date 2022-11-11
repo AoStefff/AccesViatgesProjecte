@@ -13,6 +13,13 @@ public class Client  {
     public Client() {
     }
 
+    public Client( String dni, String nom, LocalDate dataNaix, String telefon, String email) {
+        this.dni = dni;
+        this.nom = nom;
+        this.dataNaix = dataNaix;
+        this.telefon = telefon;
+        this.email = email;
+    }
     public Client(int id, String dni, String nom, LocalDate dataNaix, String telefon, String email) {
        this.id=id;
         this.dni = dni;
