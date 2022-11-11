@@ -10,23 +10,27 @@ public class Client  {
     String telefon;
     String email;
 
+    boolean admin;
     public Client() {
     }
 
-    public Client( String dni, String nom, LocalDate dataNaix, String telefon, String email) {
+    public Client( String dni, String nom, LocalDate dataNaix, String telefon, String email,boolean admin) {
         this.dni = dni;
         this.nom = nom;
         this.dataNaix = dataNaix;
         this.telefon = telefon;
         this.email = email;
+        this.admin=admin;
+
     }
-    public Client(int id, String dni, String nom, LocalDate dataNaix, String telefon, String email) {
+    public Client(int id, String dni, String nom, LocalDate dataNaix, String telefon, String email,boolean admin) {
        this.id=id;
         this.dni = dni;
         this.nom = nom;
         this.dataNaix = dataNaix;
         this.telefon = telefon;
         this.email = email;
+        this.admin=admin;
     }
 
     public int getId() {
@@ -77,5 +81,11 @@ public class Client  {
         this.email = email;
     }
 
+    public boolean isAdmin() {
+        return admin;
+    }
 
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 }

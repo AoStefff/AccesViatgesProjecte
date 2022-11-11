@@ -20,15 +20,13 @@ public class Main {
         }
     }
 
-    public Main() throws SQLException {
-    }
 
     public static void main(String[] args) throws SQLException {
         Scanner lec=new Scanner(System.in);
 
         int opcio = 0;
        do{
-           System.out.println("\t1. Iniciar sessió\n\t2. Registrar");
+           System.out.println("\t[1] Iniciar sessió\n\t[2] Registrar");
            opcio=lec.nextInt();
            lec.nextLine();
            switch (opcio){
@@ -37,16 +35,28 @@ public class Main {
                    System.out.println("Dni del usuari: ");
                    String dni=lec.nextLine();
                       while(!userExist(dni)){
-                          System.out.println("Dni del usuari: ");
+                          System.out.println("No existeix l'usuari: ");
                           dni=lec.nextLine();
                       }
                       System.out.println("Inici de sessió correcte");
-
+                     Client cli= dao.cercaClient(dni,con);
+                     if(cli.isAdmin()){
+                         menuAdmin();
+                     }
+                     else{
+                         menuUser(cli);
+                     }
                    break;
-               case 2:
-                   System.out.println("Formulari de registre\n");
 
-                 /*  System.out.println("Nom:");
+
+
+
+
+
+
+                     case 2:
+                   System.out.println("Formulari de registre\n");
+                   System.out.println("Nom:");
                    String nom=lec.nextLine();
                    System.out.println("Dni: ");
                    dni=lec.nextLine();
@@ -55,18 +65,72 @@ public class Main {
                    System.out.println("Email: ");
                    String email=lec.next();
                    System.out.println("Telefon: ");
-                   String telefon=lec.next();*/
-
-                 //  String []dataa=data.split("-");
-                //   Client c=new Client(dni,nom,LocalDate.of(Integer.parseInt(dataa[2]),Integer.parseInt(dataa[1]),Integer.parseInt(dataa[0])),telefon,email);
-                   Client c=new Client("41607304F","Stefan",LocalDate.of(2003,03,30),"stmoca@inspalamos.cat","677429940");
-
+                   String telefon=lec.next();
+                   while(userExist(dni)){
+                       System.out.println("Dni del usuari: ");
+                       dni=lec.nextLine();
+                   }
+                   String []dataa=data.split("-");
+                   Client c=new Client(dni,nom,LocalDate.of(Integer.parseInt(dataa[2]),Integer.parseInt(dataa[1]),Integer.parseInt(dataa[0])),telefon,email,false);
                    dao.createClient(c,con);
            }
         }
         while(opcio!=0);
 
     }
+
+
+
+public static void menuAdmin(){
+    Scanner lec=new Scanner(System.in);
+
+    int opcio;
+        do{
+            System.out.println("\t[1] Visualitza tots els viatges actius\n\t[2] Afegeix viatge\n\t[3] Deshabilitar viatges");
+            opcio=lec.nextInt();
+            lec.nextLine();
+            switch (opcio){
+                case 1:
+
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+            }
+    }while(opcio!=0);
+}
+public static void menuUser(Client c){
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static boolean userExist(String d){
         Client c= dao.cercaClient(d,con);
         if (c.getDni().equals(d)){

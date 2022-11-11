@@ -26,7 +26,7 @@ public class Implementacions implements DAO {
             ResultSet rs= stmt.executeQuery("Select * from client where dni='"+dni+"'");
             rs.getRow();
             rs.next();
-             c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"));
+             c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"),rs.getBoolean("admin"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -40,7 +40,7 @@ public class Implementacions implements DAO {
             ResultSet rs= stmt.executeQuery("Select "+id+" from client");
             rs.getRow();
 
-            c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"));
+            c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"),rs.getBoolean("admin"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
