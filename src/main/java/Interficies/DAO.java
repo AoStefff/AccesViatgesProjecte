@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DAO {
     List<Client> TotsCli();
-    Client cercaClient(int id, Connection con);
+    Client cercaClient(String dni, Connection con);
 
     boolean createClient(Client cli, Connection con);
     boolean updateClient(Client cli, Connection con);

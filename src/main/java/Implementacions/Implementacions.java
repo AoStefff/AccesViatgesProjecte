@@ -17,9 +17,20 @@ public class Implementacions implements DAO {
     }
 
     @Override
+    public Client cercaClient(String dni, Connection con) {
+        try {
+            Statement stmt=con.createStatement();
+            stmt.executeQuery("Select "+dni+" from client");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
     public Client cercaClient(int id, Connection con) {
         try {
             Statement stmt=con.createStatement();
+            stmt.executeQuery("Select "+id+" from client");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -32,7 +43,7 @@ public class Implementacions implements DAO {
     public boolean createClient(Client cli, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Insert into client values(\'"+cli.getId()+"\',\'"+cli.getDni()+"\',\'"+cli.getNom()+"\',\'"+cli.getDataNaix()+"\',\'"+cli.getTelefon()+"\',\'"+cli.getEmail()+"\')");
+            stmt.executeUpdate("Insert into client (dni,nom,data_naix,mail,telefon) values('"+cli.getDni()+"','"+cli.getNom()+"','"+cli.getDataNaix()+"','"+cli.getTelefon()+"','"+cli.getEmail()+"')");
         }
         catch(Exception a) {
             System.out.println(a);
