@@ -56,10 +56,10 @@ public class Implementacions implements DAO {
             stmt.executeUpdate("Insert into client (dni,nom,data_naix,mail,telefon) values('"+cli.getDni()+"','"+cli.getNom()+"','"+cli.getDataNaix()+"','"+cli.getTelefon()+"','"+cli.getEmail()+"')");
         }
         catch(Exception a) {
-            System.out.println(a);
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -84,7 +84,15 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean createBitllet(Bitllet bit, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            stmt.executeUpdate("Insert into bitllets (preu,tipus_s,id_viatge) values('"+bit.getPreu()+"','"+bit.getTipusSeient()+"','"+bit.getIdViatge()+"')");
+        }
+        catch(Exception a) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
