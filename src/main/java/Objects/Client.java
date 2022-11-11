@@ -13,8 +13,7 @@ public class Client  {
     public Client() {
     }
 
-    public Client(int id, String dni, String nom, LocalDate dataNaix, String telefon, String email) {
-        this.id = id;
+    public Client( String dni, String nom, LocalDate dataNaix, String telefon, String email) {
         this.dni = dni;
         this.nom = nom;
         this.dataNaix = dataNaix;
