@@ -49,11 +49,6 @@ public class Main {
                    break;
 
 
-
-
-
-
-
                      case 2:
                    System.out.println("Formulari de registre\n");
                    System.out.println("Nom:");
@@ -103,7 +98,24 @@ public static void menuAdmin(){
     }while(opcio!=0);
 }
 public static void menuUser(Client c){
+    Scanner lec=new Scanner(System.in);
 
+    int opcio;
+    do{
+        opcio=lec.nextInt();
+        lec.nextLine();
+        switch (opcio){
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+                break;
+        }
+    }while (opcio!=0);
 }
 
 
