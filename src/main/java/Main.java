@@ -165,7 +165,7 @@ public static void menuUser(Client c){
 
     int opcio;
     do{
-        System.out.println("\t[1] Visualitza viatges per  \n\t[2] Comprar  bitllets \n\t[3] Editar");
+        System.out.println("\t[1] Visualitza viatges per  \n\t[2] Comprar  bitllets \n\t[3] Editar els teus viatges");
 
         opcio=lec.nextInt();
         lec.nextLine();
@@ -249,9 +249,9 @@ public static void menuUser(Client c){
                                                    }
                                                     mal=lec.nextInt();
                                                    lec.nextLine();
-
                                                   fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
                                                    dao.createFacEquipatge(fe,con);
+                                                    com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
 
                                                case 2:
                                                    System.out.println("Tria una maleta: \n");
@@ -264,6 +264,7 @@ public static void menuUser(Client c){
 
                                                   fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
                                                    dao.createFacEquipatge(fe,con);
+                                                   com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
 
                                                case 1:
                                                    System.out.println("Tria una maleta: \n");
@@ -274,14 +275,17 @@ public static void menuUser(Client c){
                                                    lec.nextLine();
                                                    fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
                                                    dao.createFacEquipatge(fe,con);
+                                                   com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
+
                                            }
+                                           dao.createCompra(com,con);
 
                                        //Cear maletes MAX 3
                                        //Per maleta
                                    }
                                    else{
                                        Compra com=new Compra(b.getId(),v.getIdViatge(),c.getId(),LocalDate.now(),b.getPreu(),nom,dni);
-
+                                        dao.createCompra(com,con);
                                    }
 
                                }
