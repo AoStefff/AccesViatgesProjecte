@@ -20,15 +20,16 @@ public class Viatge {
         this.idTransport = idTransport;
         this.habilitat = habilitat;
     }
-
-    public Viatge(int idViatge, int idOrigen, int idDesti, LocalDateTime dataHora, int idTransport, boolean habilitat) {
-        this.idViatge = idViatge;
+    public Viatge(int idViatge,int idOrigen, int idDesti, LocalDateTime dataHora, int idTransport, boolean habilitat) {
+        this.idViatge=idViatge;
         this.idOrigen = idOrigen;
         this.idDesti = idDesti;
         this.dataHora = dataHora;
         this.idTransport = idTransport;
         this.habilitat = habilitat;
     }
+
+
 
     public int getIdViatge() {
         return idViatge;
