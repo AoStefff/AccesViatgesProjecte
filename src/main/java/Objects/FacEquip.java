@@ -6,8 +6,16 @@ public class FacEquip {
     int idCli;
     int idEqui;
 
+    public FacEquip() {
+    }
+
     public FacEquip(int id, int idVia, int idCli, int idEqui) {
         this.id = id;
+        this.idVia = idVia;
+        this.idCli = idCli;
+        this.idEqui = idEqui;
+    }
+    public FacEquip( int idVia, int idCli, int idEqui) {
         this.idVia = idVia;
         this.idCli = idCli;
         this.idEqui = idEqui;

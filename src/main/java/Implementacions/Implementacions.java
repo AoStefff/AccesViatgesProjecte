@@ -332,7 +332,7 @@ public class Implementacions implements DAO {
     public boolean createFacEquipatge(FacEquip feq, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Insert into factura_equipatge values("+feq.getId()+","+feq.getIdVia()+","+feq.getIdCli()+","+feq.getIdEqui()+")");
+            stmt.executeUpdate("Insert into factura_equipatge(id_viatge,id_client,id_equipatge) values("+feq.getIdVia()+","+feq.getIdCli()+","+feq.getIdEqui()+")");
         }
         catch(Exception a) {
             return false;
