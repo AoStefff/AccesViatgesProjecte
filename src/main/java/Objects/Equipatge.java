@@ -13,6 +13,11 @@ public class Equipatge {
         this.pes = pes;
         this.preu=preu;
     }
+    public Equipatge(String nom, double pes, double preu) {
+        this.nom = nom;
+        this.pes = pes;
+        this.preu=preu;
+    }
 
     public int getId() {
         return id;

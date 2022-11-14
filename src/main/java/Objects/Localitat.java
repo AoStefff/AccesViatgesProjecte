@@ -15,6 +15,12 @@ public class Localitat {
         this.pais = pais;
         this.abreviacio = abreviacio;
     }
+    public Localitat(String nom, String pais, String abreviacio) {
+        this.id = id;
+        this.nom = nom;
+        this.pais = pais;
+        this.abreviacio = abreviacio;
+    }
 
     public int getId() {
         return id;

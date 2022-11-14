@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -100,7 +101,58 @@ public static void menuAdmin(){
                     }
                     break;
                 case 2:
-
+                    ArrayList<Localitat> localitats = dao.TotsLoc(con);
+                    ArrayList<Transport> transports = dao.TotsTran(con);
+                    int idOrigen = 0;
+                    int idDesti=0;
+                    int idTransport=0;
+                    boolean trobat = false;
+                    int i=0;
+                    do{
+                        System.out.print("Entra l'origen del viatge: ");
+                        String origen = lec.nextLine().toLowerCase();
+                        while (!trobat && i<localitats.size()){
+                            if (localitats.get(i).getNom().toLowerCase().equals(origen))  {
+                                trobat=true;
+                                idOrigen = localitats.get(i).getId();
+                            }
+                            i++;
+                        }
+                    }while (!trobat);
+                    trobat = false;
+                    i=0;
+                    do{
+                        System.out.print("Entra el destí del viatge: ");
+                        String desti = lec.nextLine().toLowerCase();
+                        while (!trobat && i<localitats.size()){
+                            if (localitats.get(i).getNom().toLowerCase().equals(desti)) {
+                                idDesti = localitats.get(i).getId();
+                                trobat=true;
+                            }
+                            i++;
+                        }
+                    }while (!trobat);
+                    System.out.println("Entra la data 'DD-MM-AAAA' del viatge");
+                    String [] data = lec.nextLine().split("-");
+                    System.out.println("Entra l'hora 'HH:MM' del viatge");
+                    String [] hora =lec.nextLine().split(":");
+                    LocalDateTime dateTime = LocalDateTime.of(LocalDate.of(Integer.parseInt(data[0]),Integer.parseInt(data[1]),Integer.parseInt(data[2])),LocalTime.of(Integer.parseInt(hora[0]),Integer.parseInt(hora[1])));
+                    trobat = false;
+                    i=0;
+                    do{
+                        System.out.print("Entra el transport del viatge: ");
+                        String transport = lec.nextLine().toLowerCase();
+                        while (!trobat && i<localitats.size()){
+                            if (localitats.get(i).getNom().toLowerCase().equals(transport)) {
+                                trobat=true;
+                                idTransport = localitats.get(i).getId();
+                            }
+                            i++;
+                        }
+                    }while (!trobat);
+                    boolean habilitat = true;
+                    Viatge nouViatge = new Viatge(idOrigen,idDesti,dateTime,idTransport,habilitat);
+                    dao.createViatge(nouViatge,con);
                     break;
                 case 3:
 

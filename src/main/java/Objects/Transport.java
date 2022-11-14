@@ -17,6 +17,12 @@ public class Transport {
         this.nom = nom;
         this.maxPes =max_pes;
     }
+    public Transport(int sNormal, int sPreferent, String nom, int max_pes) {
+        this.sNormal = sNormal;
+        this.sPreferent = sPreferent;
+        this.nom = nom;
+        this.maxPes =max_pes;
+    }
 
     public int getId() {
         return id;

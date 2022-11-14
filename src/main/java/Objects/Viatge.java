@@ -13,8 +13,7 @@ public class Viatge {
     public Viatge() {
     }
 
-    public Viatge(int idViatge, int idOrigen, int idDesti, LocalDateTime dataHora, int idTransport, boolean habilitat) {
-        this.idViatge = idViatge;
+    public Viatge(int idOrigen, int idDesti, LocalDateTime dataHora, int idTransport, boolean habilitat) {
         this.idOrigen = idOrigen;
         this.idDesti = idDesti;
         this.dataHora = dataHora;

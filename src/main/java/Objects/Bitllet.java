@@ -15,6 +15,11 @@ public class Bitllet {
         this.tipusSeient = tipusSeient;
         this.idViatge = idViatge;
     }
+    public Bitllet(double preu, int tipusSeient, int idViatge) {
+        this.preu = preu;
+        this.tipusSeient = tipusSeient;
+        this.idViatge = idViatge;
+    }
 
     public int getId() {
         return id;
