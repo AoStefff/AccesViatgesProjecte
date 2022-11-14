@@ -1,11 +1,14 @@
 import Implementacions.Implementacions;
 import Interficies.DAO;
-import Objects.Client;
+import Objects.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -86,7 +89,15 @@ public static void menuAdmin(){
             lec.nextLine();
             switch (opcio){
                 case 1:
+                    ArrayList<Viatge> viatgeList = dao.TotsVia(con);
 
+                    for(Viatge v:viatgeList){
+                        System.out.println("\n---------------");
+                        System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
+                        System.out.print(v.getIdOrigen()+" ---> "+v.getIdDesti());
+                        System.out.print(v.getDataHora());
+
+                    }
                     break;
                 case 2:
 
@@ -102,13 +113,91 @@ public static void menuUser(Client c){
 
     int opcio;
     do{
+        System.out.println("\t[1] Visualitza viatges per  \n\t[2] Comprar  bitllets \n\t[3] Editar");
+
         opcio=lec.nextInt();
         lec.nextLine();
         switch (opcio){
             case 1:
-
+                ArrayList<Viatge> viatgeList = dao.TotsVia(con);
+                String origen;
+                System.out.println("Introdueix la teva ciutat de sortida");
+                origen=lec.nextLine();
+                for(Viatge v:viatgeList){
+                    if (dao.cercaLocalitat(v.getIdOrigen(),con).getNom().equalsIgnoreCase(origen) && LocalDateTime.now().isBefore(v.getDataHora())) {
+                        System.out.println("\n---------------");
+                        System.out.println(dao.cercaTransport(v.getIdTransport(), con).getNom());
+                        System.out.print(v.getIdOrigen() + " ---> " + v.getIdDesti());
+                        System.out.print(v.getDataHora());
+                        System.out.println("Copia aquest codi per comprar bitllets d'aquest viatge: "+v.getIdViatge());
+                    }
+                }
                 break;
             case 2:
+                int codi=0;
+                System.out.println("Enganxa el codi que ha copiat: ");
+               codi= lec.nextInt();
+                lec.nextLine();
+
+                ArrayList<Bitllet>bitllets=dao.TotsBit(con);
+                boolean trobat=false;
+                Bitllet b = null;
+                int i=0;
+                while(!trobat){
+                    if(bitllets.get(i).getIdViatge()==codi){
+                        b=bitllets.get(i);
+                        trobat=true;
+                    }
+                }
+                Viatge v = dao.cercaViatge(codi,con);
+                Transport t = dao.cercaTransport(v.getIdTransport(),con);
+                int seients= t.getsNormal() + t.getsPreferent();
+                 ArrayList<Compra>compres = dao.TotsCom(con);
+                 int dispo=seients;
+                 for(Compra co:compres){
+                     if(co.getIdBitllet()==b.getId()){
+                         dispo--;
+                     }
+                 }
+                 System.out.println("Actualment queden "+dispo+" bitllets disponibles");
+                 System.out.println("Preu per bitllet "+b.getPreu());
+                 System.out.println("Vols comprar-ne? (S/N)");
+                 String resp="";
+                 resp=lec.next();
+                 if (resp.equalsIgnoreCase("S")){
+                         System.out.println("Quants bitllets vols comprar?");
+                            int q=lec.nextInt();
+                            lec.nextLine();
+                            if(q<=dispo){
+                               System.out.println(b.getPreu()*q);
+                               for (int j=0;j<q;j++){
+                                   System.out.println("Introdueix el nom del passatger");
+                                   String nom=lec.nextLine();
+                                   System.out.println("Introdueix el dni del passatger");
+                                   String dni=lec.nextLine();
+
+                                   System.out.println("Portarà maletes? (S/N)");
+                                   resp=lec.nextLine();
+                                   if (resp.equalsIgnoreCase("S")){
+                                       //Cear maletes MAX 3
+                                       //Per maleta
+                                   }
+
+                               }
+
+                            }
+                            else{
+                                System.out.println("No hi ha tants bitlllets disponibles");
+
+                            }
+
+
+
+
+
+
+
+                 }
 
                 break;
             case 3:
