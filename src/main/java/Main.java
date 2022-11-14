@@ -96,7 +96,13 @@ public static void menuAdmin(){
                         System.out.println("\n---------------");
                         System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
                         System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom()+" ---> "+dao.cercaLocalitat(v.getIdDesti(),con).getNom());
-                        System.out.println("      "+v.getDataHora());
+                        System.out.print("      "+v.getDataHora());
+                        if (v.isHabilitat()){
+                            System.out.println("     HABILITAT");
+                        }
+                        else {
+                            System.out.println("     NO HABILITAT");
+                        }
 
                     }
                     break;
@@ -157,10 +163,12 @@ public static void menuAdmin(){
                 case 3:
                     ArrayList<Viatge> viatgeLlista = dao.TotsVia(con);
                     for(Viatge v:viatgeLlista){
-                        System.out.println("\n---------------");
-                        System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
-                        System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom()+" ---> "+dao.cercaLocalitat(v.getIdDesti(),con).getNom());
-                        System.out.println("      "+v.getDataHora()+"       ID: "+v.getIdViatge());
+                        if (v.isHabilitat()){
+                            System.out.println("\n---------------");
+                            System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
+                            System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom()+" ---> "+dao.cercaLocalitat(v.getIdDesti(),con).getNom());
+                            System.out.println("      "+v.getDataHora()+"       ID: "+v.getIdViatge());
+                        }
                     }
                     System.out.print("Entra la id de viatge que vols deshabilitar: ");
                     int id = lec.nextInt();
