@@ -267,7 +267,7 @@ public static void menuUser(Client c){
                 System.out.println("Introdueix la teva ciutat de sortida");
                 origen=lec.nextLine();
                 for(Viatge v:viatgeList){
-                    if (dao.cercaLocalitat(v.getIdOrigen(),con).getNom().equalsIgnoreCase(origen) && LocalDateTime.now().isBefore(v.getDataHora())) {
+                    if (dao.cercaLocalitat(v.getIdOrigen(),con).getNom().equalsIgnoreCase(origen) && LocalDateTime.now().isBefore(v.getDataHora()) && v.isHabilitat()) {
                         System.out.println("\n---------------");
                         System.out.println(dao.cercaTransport(v.getIdTransport(), con).getNom());
                         System.out.print(v.getIdOrigen() + " ---> " + v.getIdDesti());
@@ -367,6 +367,7 @@ public static void menuUser(Client c){
                                                    else{
                                                        System.out.println("Supera el pes maxim del transport");
                                                    }
+
                                                    case 2:
                                                    System.out.println("Tria una maleta: \n");
                                                    for(Equipatge e:equips) {
@@ -428,6 +429,26 @@ public static void menuUser(Client c){
 
                 break;
             case 3:
+           ArrayList<FacEquip>faceq=new ArrayList<>();
+           ArrayList<Compra>com=new ArrayList<>();
+
+           faceq=dao.TotsFequip(con);
+           com=dao.TotsCom(con);
+
+           for(Compra co:com){
+               if(co.getIdClient()==c.getId()) {
+                   System.out.println(dao.cercaLocalitat(dao.cercaViatge(co.getIdViatge(), con).getIdOrigen(), con).getAbreviacio() + " - " + dao.cercaLocalitat(dao.cercaViatge(co.getIdViatge(), con).getIdDesti(), con).getAbreviacio());
+                   System.out.println(co.getPreu());
+               }
+           }
+
+
+
+
+
+
+
+
 
                 break;
         }
