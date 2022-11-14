@@ -155,7 +155,17 @@ public static void menuAdmin(){
                     dao.createViatge(nouViatge,con);
                     break;
                 case 3:
-
+                    ArrayList<Viatge> viatgeLlista = dao.TotsVia(con);
+                    for(Viatge v:viatgeLlista){
+                        System.out.println("\n---------------");
+                        System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
+                        System.out.print(v.getIdOrigen()+" ---> "+v.getIdDesti());
+                        System.out.print("      "+v.getDataHora()+"       "+v.getIdViatge());
+                    }
+                    System.out.print("Entra la id de viatge que vols esborrar: ");
+                    int id = lec.nextInt();
+                    lec.nextLine();
+                    dao.deleteViatge(dao.cercaViatge(id,con),con);
                     break;
             }
     }while(opcio!=0);
