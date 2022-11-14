@@ -145,10 +145,12 @@ public static void menuAdmin(){
                     boolean habilitat = true;
                     Viatge nouViatge = new Viatge(idOrigen,idDesti,dateTime,idTransport,habilitat);
                     dao.createViatge(nouViatge,con);
+                    ArrayList<Viatge>viatgeArrayList=dao.TotsVia(con);
                     System.out.println("Entra el preu del bitllet");
                     double preuN = lec.nextDouble();
                     lec.nextLine();
-                    dao.createBitllet(new Bitllet(preuN,1,nouViatge.getIdViatge()),con);
+                    Bitllet nouBitllet = new Bitllet(preuN,1,viatgeArrayList.get(viatgeArrayList.size()-1).getIdViatge());
+                    dao.createBitllet(nouBitllet,con);
                     break;
                 case 3:
                     imprimirViatges();
@@ -261,8 +263,8 @@ public static void menuAdmin(){
                                 if (bitllets.get(i).getIdViatge()==idE) trobatB = true;
                                 else i++;
                             }
-                            dao.deleteViatge(dao.cercaViatge(idE,con),con);
                             dao.deleteBitllet(dao.cercaBitllet(bitllets.get(i).getId(),con),con);
+                            dao.deleteViatge(dao.cercaViatge(idE,con),con);
 
                     }
             }
@@ -279,6 +281,9 @@ public static void menuUser(Client c){
         lec.nextLine();
         switch (opcio){
             case 1:
+                imprimirViatges();
+                break;
+            case 2:
                 ArrayList<Viatge> viatgeList = dao.TotsVia(con);
                 String origen;
                 System.out.println("Introdueix la teva ciutat de sortida");
@@ -292,8 +297,6 @@ public static void menuUser(Client c){
                         System.out.println("Per comprar bitllets d'aquest viatge copia aquest codi: "+v.getIdViatge());
                     }
                 }
-                break;
-            case 2:
                 int codi=0;
                 System.out.println("Enganxa el codi que has copiat: ");
                 codi= lec.nextInt();
@@ -303,11 +306,12 @@ public static void menuUser(Client c){
                 boolean trobat=false;
                 Bitllet b = null;
                 int i=0;
-                while(!trobat){
+                while(!trobat && i< bitllets.size()){
                     if(bitllets.get(i).getIdViatge()==codi){
                         b=bitllets.get(i);
                         trobat=true;
                     }
+                    else i++;
                 }
                 Viatge v = dao.cercaViatge(codi,con);
                 Transport t = dao.cercaTransport(v.getIdTransport(),con);
@@ -326,120 +330,159 @@ public static void menuUser(Client c){
                  resp=lec.next();
                  if (resp.equalsIgnoreCase("S")){
                          System.out.println("Quants bitllets vols comprar?");
-                            int q=lec.nextInt();
+                            int qB=lec.nextInt();
                             lec.nextLine();
-                            if(q<=dispo){
-                               System.out.println(b.getPreu()*q);
-                               for (int j=0;j<q;j++){
+                            if(qB<=dispo){
+                               System.out.println(b.getPreu()*qB);
+                                double pest=0;
+                               for (int j=0;j<qB;j++){
                                    System.out.println("Introdueix el nom del passatger");
                                    String nom=lec.nextLine();
                                    System.out.println("Introdueix el dni del passatger");
                                    String dni=lec.nextLine();
+                                   ArrayList<FacEquip>facEquipsM=dao.TotsFequip(con);
+                                   int contador=0;
+                                   for (FacEquip feq:facEquipsM){
+                                       if (feq.getIdVia()==dao.cercaViatge(codi,con).getIdViatge()&&feq.getIdCli()==c.getId()){
+                                           contador++;
+                                       }
+                                   }
+                                   if (contador<3){
+                                       System.out.println("Portarà maletes? (S/N)");
+                                       resp=lec.nextLine();
+                                       if (resp.equalsIgnoreCase("S")){
+                                           Compra com=new Compra(b.getId(),v.getIdViatge(),c.getId(),LocalDate.now(),b.getPreu(),nom,dni);
+                                           ArrayList<Equipatge>equips=dao.TotsEquip(con);
+                                           System.out.println("Quantes maletes portarà? Maxim 3 per persona");
+                                           int quant=lec.nextInt();
+                                           lec.nextLine();
 
-                                   System.out.println("Portarà maletes? (S/N)");
-                                   resp=lec.nextLine();
-                                   if (resp.equalsIgnoreCase("S")){
-                                       Compra com=new Compra(b.getId(),v.getIdViatge(),c.getId(),LocalDate.now(),b.getPreu(),nom,dni);
-
-                                       ArrayList<Equipatge>equips=dao.TotsEquip(con);
-                                       System.out.println("Quantes maletes portarà? Maxim 3 per persona");
-                                       q=lec.nextInt();
-                                       lec.nextLine();
-                                            int mal=0;
-                                       FacEquip fe=new FacEquip();
-                                       Equipatge eq=new Equipatge();
-                                       double pesPas=0;
-                                      ArrayList <FacEquip>auxFacEquips= dao.TotsFequip(con);
-                                      ArrayList<FacEquip>facEquips=new ArrayList<>();
-                                      for(int d=0;d<auxFacEquips.size();d++){
-                                          if(auxFacEquips.get(d).getIdVia()==v.getIdViatge()){
-                                              facEquips.add(dao.cercaFacEquipatge(auxFacEquips.get(d).getId(),con));
-                                          }
-                                      }
-                                      double pest=0;
-                                      for(int f=0;f<facEquips.size();f++){
-
-                                          pest=pest+dao.cercaEquipatge(facEquips.get(f).getIdEqui(),con).getPes();
-
-                                      }
-                                       int quant=lec.nextInt();
-                                           lec.nextInt();
-                                           switch (quant){
-                                               case 3:
-                                                   System.out.println("Tria una maleta: \n");
-                                                   for(Equipatge e:equips) {
-                                                       System.out.println(e.getId() + " - " + e.getNom());
-                                                   }
-                                                   mal=lec.nextInt();
-                                                   lec.nextLine();
-                                                   fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
+                                           for (int k=0;k<quant;k++){
+                                               System.out.println("Tria una maleta: \n");
+                                               for(Equipatge e:equips) {
+                                                   System.out.println(e.getId() + " - " + e.getNom());
+                                               }
+                                               int mal=lec.nextInt();
+                                               lec.nextLine();
+                                               FacEquip fe;
+                                               fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
+                                               pest=pest+dao.cercaEquipatge(mal,con).getPes();
+                                               if(pest<=dao.cercaTransport(v.getIdTransport(),con).getMaxPes()){
                                                    dao.createFacEquipatge(fe,con);
                                                    com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
-
-                                                     eq=dao.cercaEquipatge(mal,con);
-                                                   pesPas=eq.getPes();
-                                                   if(pest+pesPas<dao.cercaTransport(v.getIdTransport(),con).getMaxPes()){
-                                                       pest=pest+pesPas;
-                                                   }
-                                                   else{
-                                                       System.out.println("Supera el pes maxim del transport");
-                                                   }
-                                                   case 2:
-                                                   System.out.println("Tria una maleta: \n");
-                                                   for(Equipatge e:equips) {
-                                                       System.out.println(e.getId() + " - " + e.getNom());
-                                                   }
-                                                    mal=lec.nextInt();
-                                                   lec.nextLine();
-
-
-                                                  fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
-                                                   dao.createFacEquipatge(fe,con);
-                                                   com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
-                                                   pesPas=eq.getPes();
-                                                   if(pest+pesPas<dao.cercaTransport(v.getIdTransport(),con).getMaxPes()){
-                                                       pest=pest+pesPas;
-                                                   }
-
-                                               case 1:
-                                                   System.out.println("Tria una maleta: \n");
-                                                   for(Equipatge e:equips) {
-                                                       System.out.println(e.getId() + " - " + e.getNom());
-                                                   }
-                                                   mal=lec.nextInt();
-                                                   lec.nextLine();
-                                                   fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
-                                                   dao.createFacEquipatge(fe,con);
-                                                   com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
-                                                   pesPas=eq.getPes();
-                                                   if(pest+pesPas<dao.cercaTransport(v.getIdTransport(),con).getMaxPes()){
-                                                       pest=pest+pesPas;
-                                                   }
-
+                                               }
+                                               else{
+                                                   System.out.println("Supera el pes maxim del transport");
+                                                   break;
+                                               }
                                            }
                                            dao.createCompra(com,con);
-
-                                       //Cear maletes MAX 3
-                                       //Per maleta
+                                       }
                                    }
+
                                    else{
+                                       System.out.println("Ja has entrat 3 maletes.");
                                        Compra com=new Compra(b.getId(),v.getIdViatge(),c.getId(),LocalDate.now(),b.getPreu(),nom,dni);
-                                        dao.createCompra(com,con);
+                                       dao.createCompra(com,con);
                                    }
-
                                }
-
                             }
                             else{
                                 System.out.println("No hi ha tants bitlllets disponibles");
-
                             }
-
                  }
-
+                 else System.out.println("Operació cancel·lada correctament.");
                 break;
             case 3:
+                System.out.println("\t[1] Eliminar compra de bitllet \n\t[2] Eliminar maleta facturada \n\t[3] Facturar una altra maleta");
+                int menuC = lec.nextInt();
+                lec.nextLine();
 
+                switch (menuC){
+                    case 1:
+                        ArrayList<Compra>compras=dao.TotsCom(con);
+                        ArrayList<Compra>compraC= new ArrayList<>();
+                        for (Compra co:compras){
+                            if (co.getIdClient()==c.getId()){
+                                compraC.add(co);
+                            }
+                        }
+                        for (Compra com:compraC){
+                            System.out.print(dao.cercaLocalitat(dao.cercaViatge(com.getIdViatge(),con).getIdOrigen(),con).getNom()+"------>"+dao.cercaLocalitat(dao.cercaViatge(com.getIdViatge(),con).getIdDesti(),con).getNom());
+                            System.out.println("     ID: "+com.getIdCompra());
+                        }
+                        System.out.println("Entra la ID per esborrar la compra");
+                        int idE = lec.nextInt();
+                        lec.nextLine();
+                        dao.deleteCompra(dao.cercaCompra(idE,con),con);
+                        break;
+                    case 2:
+                        ArrayList<FacEquip>facEquips=dao.TotsFequip(con);
+                        ArrayList<FacEquip>facEqC= new ArrayList<>();
+                        for (FacEquip fe:facEquips){
+                            if (fe.getIdCli()==c.getId()){
+                                facEqC.add(fe);
+                            }
+                        }
+                        for (FacEquip faq:facEqC){
+                            System.out.print(dao.cercaLocalitat(dao.cercaViatge(faq.getIdVia(),con).getIdOrigen(),con).getNom()+"------>"+dao.cercaLocalitat(dao.cercaViatge(faq.getIdVia(),con).getIdDesti(),con).getNom());
+                            System.out.print("     "+dao.cercaEquipatge(faq.getIdEqui(),con).getNom());
+                            System.out.println("     ID: "+faq.getId());
+                        }
+                        System.out.println("Entra la ID per esborrar la compra");
+                        int idE2 = lec.nextInt();
+                        lec.nextLine();
+                        dao.deleteFacEquipatge(dao.cercaFacEquipatge(idE2,con),con);
+                        break;
+                    case 3:
+                        ArrayList<Compra>comprasM=dao.TotsCom(con);
+                        ArrayList<Compra>compraCM= new ArrayList<>();
+                        for (Compra co:comprasM){
+                            if (co.getIdClient()==c.getId()){
+                                compraCM.add(co);
+                            }
+                        }
+                        for (Compra com:compraCM){
+                            System.out.print(dao.cercaLocalitat(dao.cercaViatge(com.getIdViatge(),con).getIdOrigen(),con).getNom()+"------>"+dao.cercaLocalitat(dao.cercaViatge(com.getIdViatge(),con).getIdDesti(),con).getNom());
+                            System.out.println("     ID: "+com.getIdCompra());
+                        }
+                        System.out.println("Entra la ID per afegir maletes");
+                        int idEM = lec.nextInt();
+                        lec.nextLine();
+                        ArrayList<FacEquip>facEquipsM=dao.TotsFequip(con);
+                        int contadorM=0;
+                        for (FacEquip feq:facEquipsM){
+                            if (feq.getIdVia()==dao.cercaViatge(dao.cercaCompra(idEM,con).getIdViatge(),con).getIdViatge()&&feq.getIdCli()==c.getId()){
+                                contadorM++;
+                            }
+                        }
+                        if (contadorM<3){
+                            System.out.println("Tria una maleta: \n");
+                            ArrayList<Equipatge>equips=dao.TotsEquip(con);
+                            for(Equipatge e:equips) {
+                                System.out.println(e.getId() + " - " + e.getNom());
+                            }
+                            int mal=lec.nextInt();
+                            lec.nextLine();
+                            FacEquip fe;
+                            Viatge vM = dao.cercaViatge(dao.cercaCompra(idEM,con).getIdViatge(),con);
+                            fe=new FacEquip(vM.getIdViatge(),c.getId(),mal);
+                            double pest=dao.cercaEquipatge(mal,con).getPes();
+                            if(pest<=dao.cercaTransport(vM.getIdTransport(),con).getMaxPes()){
+                                dao.createFacEquipatge(fe,con);
+                                dao.cercaCompra(idEM,con).setPreu(dao.cercaCompra(idEM,con).getPreu()+dao.cercaEquipatge(mal,con).getPreu());
+                            }
+                            else{
+                                System.out.println("Supera el pes maxim del transport");
+                                break;
+                            }
+                            dao.createFacEquipatge(fe,con);
+                        }
+                        else {
+                            System.out.println("Ja has entrat 3 maletes.");
+                        }
+
+                }
                 break;
         }
     }while (opcio!=0);

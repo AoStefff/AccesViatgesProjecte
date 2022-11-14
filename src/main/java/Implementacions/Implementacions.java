@@ -116,7 +116,7 @@ public class Implementacions implements DAO {
         Bitllet b;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select * from bitllets where id="+id+"");
+            ResultSet rs= stmt.executeQuery("Select * from bitllets where id_bitllet="+id);
             rs.getRow();
             rs.next();
             b=new Bitllet(rs.getInt("id_bitllet"),rs.getDouble("preu"),rs.getInt("tipus_s"),rs.getInt("id_viatge"));
@@ -187,7 +187,7 @@ public class Implementacions implements DAO {
             Statement stmt=con.createStatement();
             ResultSet rs= stmt.executeQuery("Select *  from compres where id_compra="+id);
             rs.getRow();
-
+            rs.next();
             c=new Compra(rs.getInt("id_compra"),rs.getInt("id_bitllet"),rs.getInt("id_viatge"),rs.getInt("id_client"),rs.getDate("data_compra").toLocalDate(),rs.getDouble("preu"),rs.getString("nom_viatger"),rs.getString("dni_viatger"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -254,9 +254,9 @@ public class Implementacions implements DAO {
         Equipatge q;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select "+id+" from equipatge");
+            ResultSet rs= stmt.executeQuery("Select * from equipatge where id_equipatge="+id);
             rs.getRow();
-
+            rs.next();
             q=new Equipatge(rs.getInt("id_equipatge"),rs.getString("nom"),rs.getDouble("pes"),rs.getDouble("preu"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -324,7 +324,7 @@ public class Implementacions implements DAO {
             Statement stmt=con.createStatement();
             ResultSet rs= stmt.executeQuery("Select * from factura_equipatge where id_factura =" +id);
             rs.getRow();
-
+            rs.next();
             f=new FacEquip(rs.getInt("id_factura"),rs.getInt("id_viatge"),rs.getInt("id_client"),rs.getInt("id_equipatge"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
