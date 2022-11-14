@@ -551,7 +551,6 @@ public class Implementacions implements DAO {
 
         return true;
     }
-
     @Override
     public boolean updateViatge(Viatge via, Connection con) {
         try {
@@ -561,10 +560,8 @@ public class Implementacions implements DAO {
         catch(Exception a) {
             return false;
         }
-
         return true;
     }
-
     @Override
     public boolean deleteViatge(Viatge via, Connection con) {
         try {

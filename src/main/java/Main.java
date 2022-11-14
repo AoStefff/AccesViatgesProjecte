@@ -85,26 +85,12 @@ public static void menuAdmin(){
 
     int opcio;
         do{
-            System.out.println("\t[1] Visualitza tots els viatges actius\n\t[2] Afegeix viatge\n\t[3] Deshabilitar viatges");
+            System.out.println("\t[1] Visualitza tots els viatges actius\n\t[2] Afegeix viatge\n\t[3] Deshabilitar/Habilitar viatges\n\t[4] Modificar viatges");
             opcio=lec.nextInt();
             lec.nextLine();
             switch (opcio){
                 case 1:
-                    ArrayList<Viatge> viatgeList = dao.TotsVia(con);
-
-                    for(Viatge v:viatgeList){
-                        System.out.println("\n---------------");
-                        System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
-                        System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom()+" ---> "+dao.cercaLocalitat(v.getIdDesti(),con).getNom());
-                        System.out.print("      "+v.getDataHora());
-                        if (v.isHabilitat()){
-                            System.out.println("     HABILITAT");
-                        }
-                        else {
-                            System.out.println("     NO HABILITAT");
-                        }
-
-                    }
+                    imprimirViatges();
                     break;
                 case 2:
                     ArrayList<Localitat> localitats = dao.TotsLoc(con);
@@ -151,7 +137,7 @@ public static void menuAdmin(){
                         while (!trobat && i<transports.size()){
                             if (transports.get(i).getNom().equalsIgnoreCase(transport)) {
                                 trobat=true;
-                                idTransport = localitats.get(i).getId();
+                                idTransport = transports.get(i).getId();
                             }
                             i++;
                         }
@@ -162,21 +148,106 @@ public static void menuAdmin(){
                     break;
                 case 3:
                     ArrayList<Viatge> viatgeLlista = dao.TotsVia(con);
-                    for(Viatge v:viatgeLlista){
-                        if (v.isHabilitat()){
-                            System.out.println("\n---------------");
-                            System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
-                            System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom()+" ---> "+dao.cercaLocalitat(v.getIdDesti(),con).getNom());
-                            System.out.println("      "+v.getDataHora()+"       ID: "+v.getIdViatge());
-                        }
-                    }
-                    System.out.print("Entra la id de viatge que vols deshabilitar: ");
+                    imprimirViatges();
+                    System.out.print("Entra l'ID del viatge que vols deshabilitar/habilitar: ");
                     int id = lec.nextInt();
                     lec.nextLine();
                     Viatge v = dao.cercaViatge(id,con);
-                    v.setHabilitat(false);
+                    if (v.isHabilitat()){
+                        v.setHabilitat(false);
+                    }
+                    else v.setHabilitat(true);
                     dao.updateViatge(v,con);
                     break;
+                case 4:
+                    imprimirViatges();
+                    System.out.println("\t[1] Canviar origen\n\t[2] Canviar destí\n\t[3] Canviar data\n\t[4] Canviar transport");
+                    int canviarViatge = lec.nextInt();
+                    lec.nextLine();
+                    switch (canviarViatge){
+                        case 1:
+                            System.out.println("Entra l'ID del viatge que vols canviar ");
+                            int idO = lec.nextInt();
+                            lec.nextLine();
+                            Viatge vO = dao.cercaViatge(idO,con);
+                            trobat = false;
+                            localitats=dao.TotsLoc(con);
+                            idOrigen=0;
+                            do{
+                                int i=0;
+                                System.out.print("Entra l'origen del viatge: ");
+                                String origen = lec.nextLine();
+                                while (!trobat && i<localitats.size()){
+                                    if (localitats.get(i).getNom().equalsIgnoreCase(origen))  {
+                                        trobat=true;
+                                        idOrigen = localitats.get(i).getId();
+                                    }
+                                    i++;
+                                }
+                            }while (!trobat);
+                            vO.setIdOrigen(idOrigen);
+                            dao.updateViatge(vO,con);
+                            break;
+                        case 2:
+                            System.out.println("Entra l'ID del viatge que vols canviar ");
+                            int idD = lec.nextInt();
+                            lec.nextLine();
+                            Viatge vD = dao.cercaViatge(idD,con);
+                            trobat = false;
+                            localitats=dao.TotsLoc(con);
+                            idDesti=0;
+                            do{
+                                int i=0;
+                                System.out.print("Entra el destí del viatge: ");
+                                String desti = lec.nextLine();
+                                while (!trobat && i<localitats.size()){
+                                    if (localitats.get(i).getNom().equalsIgnoreCase(desti))  {
+                                        trobat=true;
+                                        idDesti = localitats.get(i).getId();
+                                    }
+                                    i++;
+                                }
+                            }while (!trobat);
+                            vD.setIdDesti(idDesti);
+                            dao.updateViatge(vD,con);
+                            break;
+                        case 3:
+                            System.out.println("Entra l'ID del viatge que vols canviar ");
+                            int idH = lec.nextInt();
+                            lec.nextLine();
+                            Viatge vH = dao.cercaViatge(idH,con);
+                            System.out.println("Entra la data 'DD-MM-AAAA' del viatge");
+                            String [] dataH = lec.nextLine().split("-");
+                            System.out.println("Entra l'hora 'HH:MM' del viatge");
+                            String [] horaH =lec.nextLine().split(":");
+                            LocalDateTime dateTimeH = LocalDateTime.of(LocalDate.of(Integer.parseInt(dataH[2]),Integer.parseInt(dataH[1]),Integer.parseInt(dataH[0])),LocalTime.of(Integer.parseInt(horaH[0]),Integer.parseInt(horaH[1])));
+                            vH.setDataHora(dateTimeH);
+                            dao.updateViatge(vH,con);
+                            break;
+                        case 4:
+                            System.out.println("Entra l'ID del viatge que vols canviar ");
+                            int idT = lec.nextInt();
+                            lec.nextLine();
+                            Viatge vT = dao.cercaViatge(idT,con);
+                            trobat = false;
+                            transports=dao.TotsTran(con);
+                            idTransport=0;
+                            do{
+                                int i=0;
+                                System.out.print("Entra el transport del viatge: ");
+                                String transport = lec.nextLine();
+                                while (!trobat && i<transports.size()){
+                                    if (transports.get(i).getNom().equalsIgnoreCase(transport)) {
+                                        trobat=true;
+                                        idTransport = transports.get(i).getId();
+                                    }
+                                    i++;
+                                }
+                            }while (!trobat);
+                            vT.setIdTransport(idTransport);
+                            dao.updateViatge(vT,con);
+
+                    }
             }
     }while(opcio!=0);
 }
@@ -267,11 +338,11 @@ public static void menuUser(Client c){
                                                    for(Equipatge e:equips) {
                                                        System.out.println(e.getId() + " - " + e.getNom());
                                                    }
-                                                    mal=lec.nextInt();
+                                                   mal=lec.nextInt();
                                                    lec.nextLine();
-                                                  fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
+                                                   fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
                                                    dao.createFacEquipatge(fe,con);
-                                                    com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
+                                                   com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
 
                                                case 2:
                                                    System.out.println("Tria una maleta: \n");
@@ -348,14 +419,24 @@ public static void menuUser(Client c){
 
 
 
+    public static void imprimirViatges(){
+        //Només admin
+        ArrayList<Viatge> viatgeList = dao.TotsVia(con);
 
+        for(Viatge v:viatgeList){
+            System.out.println("\n---------------");
+            System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
+            System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom()+" ---> "+dao.cercaLocalitat(v.getIdDesti(),con).getNom());
+            System.out.print("      "+v.getDataHora()+ "     ID: "+v.getIdViatge());
+            if (v.isHabilitat()){
+                System.out.println("     HABILITAT");
+            }
+            else {
+                System.out.println("     NO HABILITAT");
+            }
 
-
-
-
-
-
-
+        }
+    }
 
     public static boolean userExist(String d){
         Client c= dao.cercaClient(d,con);
