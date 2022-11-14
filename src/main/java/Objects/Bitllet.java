@@ -3,13 +3,13 @@ package Objects;
 public class Bitllet {
     int id;
     double preu;
-    String tipusSeient;
+    int tipusSeient;
     int idViatge;
 
     public Bitllet() {
     }
 
-    public Bitllet(int id, double preu, String tipusSeient, int idViatge) {
+    public Bitllet(int id, double preu, int tipusSeient, int idViatge) {
         this.id = id;
         this.preu = preu;
         this.tipusSeient = tipusSeient;
@@ -32,11 +32,11 @@ public class Bitllet {
         this.preu = preu;
     }
 
-    public String getTipusSeient() {
+    public int getTipusSeient() {
         return tipusSeient;
     }
 
-    public void setTipusSeient(String tipusSeient) {
+    public void setTipusSeient(int tipusSeient) {
         this.tipusSeient = tipusSeient;
     }
 
