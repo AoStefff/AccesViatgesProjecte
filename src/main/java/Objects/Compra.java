@@ -3,6 +3,8 @@ package Objects;
 import java.time.LocalDate;
 
 public class Compra {
+
+    int idCompra;
     int idBitllet;
     int idViatge;
     int idClient;
@@ -14,7 +16,8 @@ public class Compra {
     public Compra() {
     }
 
-    public Compra(int idBitllet, int idViatge, int idClient, LocalDate dataCompra, double preu, String nomPassatger, String dniPassatger) {
+    public Compra(int idCompra,int idBitllet, int idViatge, int idClient, LocalDate dataCompra, double preu, String nomPassatger, String dniPassatger) {
+        this.idCompra=idCompra;
         this.idBitllet = idBitllet;
         this.idViatge = idViatge;
         this.idClient = idClient;
@@ -78,5 +81,13 @@ public class Compra {
 
     public void setDniPassatger(String dniPassatger) {
         this.dniPassatger = dniPassatger;
+    }
+
+    public int getIdCompra() {
+        return idCompra;
+    }
+
+    public void setIdCompra(int idCompra) {
+        this.idCompra = idCompra;
     }
 }

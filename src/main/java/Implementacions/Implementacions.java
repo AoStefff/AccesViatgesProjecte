@@ -7,15 +7,23 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Implementacions implements DAO {
 
     @Override
-    public List<Client> TotsCli() {
-
-        return null;
+    public ArrayList<Client> TotsCli(Connection con) {
+        ArrayList<Client>clients=new ArrayList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs= stmt.executeQuery("Select * from client");
+            rs.getRow();
+            rs.next();
+            clients.add(new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"),rs.getBoolean("admin")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return clients;
     }
 
     @Override
@@ -23,7 +31,7 @@ public class Implementacions implements DAO {
         Client c;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select * from client where dni='"+dni+"'");
+            ResultSet rs= stmt.executeQuery("Select * from client where dni="+dni);
             rs.getRow();
             rs.next();
              c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),(rs.getDate("data_naix").toLocalDate()),rs.getString("mail"),rs.getString("telefon"),rs.getBoolean("admin"));
@@ -37,7 +45,7 @@ public class Implementacions implements DAO {
         Client c;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select "+id+" from client");
+            ResultSet rs= stmt.executeQuery("Select * from client where id_client="+id);
             rs.getRow();
 
             c=new Client(rs.getInt("id_client"),rs.getString("dni"),rs.getString("nom"),rs.getDate("data_naix").toLocalDate(),rs.getString("mail"),rs.getString("telefon"),rs.getBoolean("admin"));
@@ -66,7 +74,7 @@ public class Implementacions implements DAO {
     public boolean updateClient(Client cli, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Update client SET (dni,nom,data_naix,mail,telefon) = ('"+cli.getDni()+"','"+cli.getNom()+"','"+cli.getDataNaix()+"','"+cli.getTelefon()+"','"+cli.getEmail()+"') where id_client='"+cli.getId()+"'");
+            stmt.executeUpdate("Update client SET (dni,nom,data_naix,mail,telefon) = ('"+cli.getDni()+"','"+cli.getNom()+"','"+cli.getDataNaix()+"','"+cli.getTelefon()+"','"+cli.getEmail()+"') where id_client="+cli.getId());
         }
         catch(Exception a) {
             return false;
@@ -77,12 +85,28 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean deleteClient(Client cli, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            ResultSet rs= stmt.executeQuery("Delete from client where id_client="+cli.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
     @Override
-    public List<Bitllet> TotsBit() {
-        return null;
+    public ArrayList<Bitllet> TotsBit(Connection con) {
+        ArrayList<Bitllet>bitllets=new ArrayList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs= stmt.executeQuery("Select * from bitllets");
+            rs.getRow();
+            rs.next();
+            bitllets.add(new Bitllet(rs.getInt("id_bitllet"),rs.getDouble("preu"),rs.getInt("tipus_s"),rs.getInt("id_viatge")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return bitllets;
     }
 
     @Override
@@ -90,7 +114,7 @@ public class Implementacions implements DAO {
         Bitllet b;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select * from bitllets where id='"+id+"'");
+            ResultSet rs= stmt.executeQuery("Select * from bitllets where id="+id+"");
             rs.getRow();
             rs.next();
             b=new Bitllet(rs.getInt("id_bitllet"),rs.getDouble("preu"),rs.getInt("tipus_s"),rs.getInt("id_viatge"));
@@ -105,7 +129,7 @@ public class Implementacions implements DAO {
     public boolean createBitllet(Bitllet bit, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Insert into bitllets (preu,tipus_s,id_viatge) values('"+bit.getPreu()+"','"+bit.getTipusSeient()+"','"+bit.getIdViatge()+"')");
+            stmt.executeUpdate("Insert into bitllets (preu,tipus_s,id_viatge) values("+bit.getPreu()+","+bit.getTipusSeient()+","+bit.getIdViatge()+")");
         }
         catch(Exception a) {
             return false;
@@ -118,7 +142,7 @@ public class Implementacions implements DAO {
     public boolean updateBitllet(Bitllet bit, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Update bitllets SET (preu,tipus_s,id_viatge) = ('"+bit.getPreu()+"','"+bit.getTipusSeient()+"','"+bit.getIdViatge()+"') where id_bitllet='"+bit.getId()+"'");
+            stmt.executeUpdate("Update bitllets SET (preu,tipus_s,id_viatge) = ("+bit.getPreu()+","+bit.getTipusSeient()+","+bit.getIdViatge()+") where id_bitllet="+bit.getId());
         }
         catch(Exception a) {
             return false;
@@ -129,12 +153,28 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean deleteBitllet(Bitllet bit, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            ResultSet rs= stmt.executeQuery("Delete from bitllets where id_bitllet="+bit.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
     @Override
-    public List<Compra> TotsCom() {
-        return null;
+    public ArrayList<Compra> TotsCom(Connection con) {
+        ArrayList<Compra>compres=new ArrayList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs= stmt.executeQuery("Select * from compres");
+            rs.getRow();
+            rs.next();
+            compres.add(new Compra(rs.getInt("id_compra"),rs.getInt("id_bitllet"),rs.getInt("id_viatge"),rs.getInt("id_client"),rs.getDate("data_compra").toLocalDate(),rs.getDouble("preu"),rs.getString("nom_viatger"),rs.getString("dni_viatger")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return compres;
     }
 
     @Override
@@ -142,10 +182,10 @@ public class Implementacions implements DAO {
         Compra c;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select "+id+" from client");
+            ResultSet rs= stmt.executeQuery("Select *  from compres where id_compra="+id);
             rs.getRow();
 
-            c=new Compra(rs.getInt("id_bitllet"),rs.getInt("id_viatge"),rs.getInt("id_client"),rs.getDate("data_compra").toLocalDate(),rs.getDouble("preu"),rs.getString("nom_viatger"),rs.getString("dni_viatger"));
+            c=new Compra(rs.getInt("id_compra"),rs.getInt("id_bitllet"),rs.getInt("id_viatge"),rs.getInt("id_client"),rs.getDate("data_compra").toLocalDate(),rs.getDouble("preu"),rs.getString("nom_viatger"),rs.getString("dni_viatger"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -170,7 +210,7 @@ public class Implementacions implements DAO {
     public boolean updateCompra(Compra com, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Update compres SET (id_bitllet,id_viatge,id_client,data_compra,preu,nom_viatger,dni_viatger) = ('"+com.getIdBitllet()+"','"+com.getIdViatge()+"','"+com.getIdClient()+"','"+com.getDataCompra()+"','"+com.getPreu()+"','"+com.getNomPassatger()+"','"+com.getDniPassatger()+"') where id_bitllet='"+com.getIdBitllet()+"' AND id_viatge='"+com.getIdViatge());
+            stmt.executeUpdate("Update compres SET (id_compra,id_bitllet,id_viatge,id_client,data_compra,preu,nom_viatger,dni_viatger) = ("+com.getIdCompra()+","+com.getIdBitllet()+","+com.getIdViatge()+","+com.getIdClient()+",'"+com.getDataCompra()+"',"+com.getPreu()+",'"+com.getNomPassatger()+"','"+com.getDniPassatger()+"') where id_bitllet="+com.getIdBitllet()+" AND id_viatge="+com.getIdViatge());
         }
         catch(Exception a) {
             return false;
@@ -181,12 +221,28 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean deleteCompra(Compra com, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            ResultSet rs= stmt.executeQuery("Delete from compres where id_bitllet="+com.getIdBitllet()+" AND id_viatge= "+com.getIdViatge());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
     @Override
-    public List<Equipatge> TotsEquip() {
-        return null;
+    public ArrayList<Equipatge> TotsEquip(Connection con) {
+        ArrayList<Equipatge>equipatges=new ArrayList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs= stmt.executeQuery("Select * from equipatge");
+            rs.getRow();
+            rs.next();
+            equipatges.add(new Equipatge(rs.getInt("id_equipatge"),rs.getString("nom"),rs.getDouble("pes"),rs.getDouble("preu")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return equipatges;
     }
 
     @Override
@@ -197,7 +253,7 @@ public class Implementacions implements DAO {
             ResultSet rs= stmt.executeQuery("Select "+id+" from equipatge");
             rs.getRow();
 
-            q=new Equipatge(rs.getInt("id_equipatge"),rs.getString("nom"),rs.getDouble("pes"));
+            q=new Equipatge(rs.getInt("id_equipatge"),rs.getString("nom"),rs.getDouble("pes"),rs.getDouble("preu"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -209,7 +265,7 @@ public class Implementacions implements DAO {
     public boolean createEquipatge(Equipatge equ, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Insert into equipatge values('"+equ.getId()+"','"+equ.getNom()+"','"+equ.getPes()+"')");
+            stmt.executeUpdate("Insert into equipatge values("+equ.getId()+",'"+equ.getNom()+"',"+equ.getPes()+","+equ.getPreu()+")");
         }
         catch(Exception a) {
             return false;
@@ -222,7 +278,7 @@ public class Implementacions implements DAO {
     public boolean updateEquipatge(Equipatge equ, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Update equipatge SET('"+equ.getId()+"','"+equ.getNom()+"','"+equ.getPes()+"') where id_equipatge='"+equ.getId()+"'");
+            stmt.executeUpdate("Update equipatge SET("+equ.getId()+",'"+equ.getNom()+"',"+equ.getPes()+","+equ.getPreu()+") where id_equipatge="+equ.getId());
         }
         catch(Exception a) {
             return false;
@@ -233,11 +289,27 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean deleteEquipatge(Equipatge equ, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            ResultSet rs= stmt.executeQuery("Delete from equipatge where id_equipatge="+equ.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
-    public List<FacEquip> TotsFequip() {
-        return null;
+    public ArrayList<FacEquip> TotsFequip(Connection con) {
+        ArrayList<FacEquip>facEquips=new ArrayList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs= stmt.executeQuery("Select * from factura_equipatge");
+            rs.getRow();
+            rs.next();
+            facEquips.add(new FacEquip(rs.getInt("id_factura"),rs.getInt("id_viatge"),rs.getInt("id_client"),rs.getInt("id_equipatge")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return facEquips;
     }
 
     @Override
@@ -245,7 +317,7 @@ public class Implementacions implements DAO {
         FacEquip f;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select "+id+" from factura_equipatge");
+            ResultSet rs= stmt.executeQuery("Select * from factura_equipatge where id_factura =" +id);
             rs.getRow();
 
             f=new FacEquip(rs.getInt("id_factura"),rs.getInt("id_viatge"),rs.getInt("id_client"),rs.getInt("id_equipatge"));
@@ -260,7 +332,7 @@ public class Implementacions implements DAO {
     public boolean createFacEquipatge(FacEquip feq, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Insert into factura_equipatge values('"+feq.getId()+"','"+feq.getIdVia()+"','"+feq.getIdCli()+"','"+feq.getIdEqui()+"')");
+            stmt.executeUpdate("Insert into factura_equipatge values("+feq.getId()+","+feq.getIdVia()+","+feq.getIdCli()+","+feq.getIdEqui()+")");
         }
         catch(Exception a) {
             return false;
@@ -273,7 +345,7 @@ public class Implementacions implements DAO {
     public boolean updateFacEquipatge(FacEquip feq, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Update factura_equipatge SET ('"+feq.getId()+"','"+feq.getIdVia()+"','"+feq.getIdCli()+"','"+feq.getIdEqui()+"') where id_factura='"+feq.getId()+"'");
+            stmt.executeUpdate("Update factura_equipatge SET ("+feq.getId()+","+feq.getIdVia()+","+feq.getIdCli()+","+feq.getIdEqui()+") where id_factura="+feq.getId()+"");
         }
         catch(Exception a) {
             return false;
@@ -284,12 +356,28 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean deleteFacEquipatge(FacEquip feq, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            ResultSet rs= stmt.executeQuery("Delete from factura_equipatge where id_factura="+feq.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
     @Override
-    public List<Localitat> TotsLoc() {
-        return null;
+    public ArrayList<Localitat> TotsLoc(Connection con) {
+        ArrayList<Localitat>localitats=new ArrayList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs= stmt.executeQuery("Select * from localitats");
+            rs.getRow();
+            rs.next();
+            localitats.add(new Localitat(rs.getInt("id_localitat"),rs.getString("nom"),rs.getString("pais"),rs.getString("abreviacio")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return localitats;
     }
 
     @Override
@@ -297,7 +385,7 @@ public class Implementacions implements DAO {
         Localitat l;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select * from localitats where id='"+id+"'");
+            ResultSet rs= stmt.executeQuery("Select * from localitats where id="+id);
             rs.getRow();
             rs.next();
             l=new Localitat(rs.getInt("id_localitat"),rs.getString("nom"),rs.getString("pais"),rs.getString("abreviacio"));
@@ -325,7 +413,7 @@ public class Implementacions implements DAO {
     public boolean updateLocalitat(Localitat loc, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Update localitats SET (nom,pais,abreviacio) = ('"+loc.getNom()+"','"+loc.getPais()+"','"+loc.getAbreviacio()+"') where id_localitat='"+loc.getId()+"'");
+            stmt.executeUpdate("Update localitats SET (nom,pais,abreviacio) = ('"+loc.getNom()+"','"+loc.getPais()+"','"+loc.getAbreviacio()+"') where id_localitat="+loc.getId()+"");
         }
         catch(Exception a) {
             return false;
@@ -336,12 +424,28 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean deleteLocalitat(Localitat loc, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            ResultSet rs= stmt.executeQuery("Delete from localitats where id_localitat="+loc.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
     @Override
-    public List<Transport> TotsTran() {
-        return null;
+    public ArrayList<Transport> TotsTran(Connection con) {
+        ArrayList<Transport>transports=new ArrayList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs= stmt.executeQuery("Select * from transport");
+            rs.getRow();
+            rs.next();
+            transports.add(new Transport(rs.getInt("id_transport"),rs.getInt("s_normal"),rs.getInt("s_preferent"),rs.getString("nom"),rs.getInt("max_pes")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return transports;
     }
 
     @Override
@@ -349,10 +453,10 @@ public class Implementacions implements DAO {
         Transport t;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select * from bitllets where id='"+id+"'");
+            ResultSet rs= stmt.executeQuery("Select * from bitllets where id="+id);
             rs.getRow();
             rs.next();
-            t=new Transport(rs.getInt("id_transport"),rs.getInt("s_normal"),rs.getInt("s_preferent"),rs.getString("nom"));
+            t=new Transport(rs.getInt("id_transport"),rs.getInt("s_normal"),rs.getInt("s_preferent"),rs.getString("nom"),rs.getInt("max_pes"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -364,7 +468,7 @@ public class Implementacions implements DAO {
     public boolean createTransport(Transport tra, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Insert into transport (s_normal,s_preferent,nom) values('"+tra.getsNormal()+"','"+tra.getsPreferent()+"','"+tra.getNom()+"')");
+            stmt.executeUpdate("Insert into transport (s_normal,s_preferent,nom,max_pes) values("+tra.getsNormal()+","+tra.getsPreferent()+",'"+tra.getNom()+"',"+tra.getMaxPes()+")");
         }
         catch(Exception a) {
             return false;
@@ -375,17 +479,41 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean updateTransport(Transport tra, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            stmt.executeUpdate("Update transport SET (s_normal,s_preferent,nom) = ("+tra.getsNormal()+","+tra.getsPreferent()+",'"+tra.getNom()+"') where id_transport="+tra.getId());
+        }
+        catch(Exception a) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public boolean deleteTransport(Transport tra, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            ResultSet rs= stmt.executeQuery("Delete from transport where id_transport="+tra.getId()+"");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
     @Override
-    public List<Viatge> TotsVia() {
-        return null;
+    public ArrayList<Viatge> TotsVia(Connection con) {
+        ArrayList<Viatge>viatges=new ArrayList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs= stmt.executeQuery("Select * from viatge");
+            rs.getRow();
+            rs.next();
+            viatges.add(new Viatge(rs.getInt("id_vitge"),rs.getInt("id_origen"),rs.getInt("id_desti"),rs.getTimestamp("data").toLocalDateTime(),rs.getInt("integer"),rs.getBoolean("habilitat")));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return viatges;
     }
 
     @Override
@@ -393,7 +521,7 @@ public class Implementacions implements DAO {
         Viatge v;
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Select * from viatge where id_viatge='"+id+"'");
+            ResultSet rs= stmt.executeQuery("Select * from viatge where id_viatge="+id);
             rs.getRow();
             rs.next();
             v=new Viatge(rs.getInt("id_vitge"),rs.getInt("id_origen"),rs.getInt("id_desti"),rs.getTimestamp("data").toLocalDateTime(),rs.getInt("integer"),rs.getBoolean("habilitat"));
@@ -407,7 +535,7 @@ public class Implementacions implements DAO {
     public boolean createViatge(Viatge via, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            stmt.executeUpdate("Insert into viatge (id_origen,id_desti,data,id_transport,habilitat) values('"+via.getIdOrigen()+"','"+via.getIdDesti()+"','"+via.getDataHora()+"','"+via.getIdTransport()+"','"+via.isHabilitat()+"')");
+            stmt.executeUpdate("Insert into viatge (id_origen,id_desti,data,id_transport,habilitat) values("+via.getIdOrigen()+","+via.getIdDesti()+",'"+via.getDataHora()+"',"+via.getIdTransport()+","+via.isHabilitat()+")");
         }
         catch(Exception a) {
             return false;
@@ -418,11 +546,25 @@ public class Implementacions implements DAO {
 
     @Override
     public boolean updateViatge(Viatge via, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            stmt.executeUpdate("Update viatge SET (id_origen,id_desti,data,id_transport,habilitat) = ("+via.getIdOrigen()+","+via.getIdDesti()+",'"+via.getDataHora()+"',"+via.getIdTransport()+","+via.isHabilitat()+") where id_viatge='"+via.getIdViatge()+"'");
+        }
+        catch(Exception a) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public boolean deleteViatge(Viatge via, Connection con) {
-        return false;
+        try {
+            Statement stmt=con.createStatement();
+            ResultSet rs= stmt.executeQuery("Delete from viatge where id_viatge="+via.getIdViatge()+"");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 }

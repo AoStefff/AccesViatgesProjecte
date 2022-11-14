@@ -3,12 +3,15 @@ package Objects;
 public class Equipatge {
     int id;
     String nom;
-    Double pes;
+    double pes;
 
-    public Equipatge(int id, String nom, Double pes) {
+    double preu;
+
+    public Equipatge(int id, String nom, double pes, double preu) {
         this.id = id;
         this.nom = nom;
         this.pes = pes;
+        this.preu=preu;
     }
 
     public int getId() {
@@ -27,11 +30,19 @@ public class Equipatge {
         this.nom = nom;
     }
 
-    public Double getPes() {
+    public double getPes() {
         return pes;
     }
 
-    public void setPes(Double pes) {
+    public void setPes(double pes) {
         this.pes = pes;
+    }
+
+    public double getPreu() {
+        return preu;
+    }
+
+    public void setPreu(double preu) {
+        this.preu = preu;
     }
 }

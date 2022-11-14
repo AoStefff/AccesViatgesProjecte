@@ -5,15 +5,17 @@ public class Transport {
     int sNormal;
     int sPreferent;
     String nom;
+    int maxPes;
 
     public Transport() {
     }
 
-    public Transport(int idTransport, int sNormal, int sPreferent, String nom) {
+    public Transport(int idTransport, int sNormal, int sPreferent, String nom, int max_pes) {
         this.id = idTransport;
         this.sNormal = sNormal;
         this.sPreferent = sPreferent;
         this.nom = nom;
+        this.maxPes =max_pes;
     }
 
     public int getId() {
@@ -46,6 +48,14 @@ public class Transport {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public int getMaxPes() {
+        return maxPes;
+    }
+
+    public void setMaxPes(int maxPes) {
+        this.maxPes = maxPes;
     }
 }
 
