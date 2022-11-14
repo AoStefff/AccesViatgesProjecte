@@ -145,9 +145,12 @@ public static void menuAdmin(){
                     boolean habilitat = true;
                     Viatge nouViatge = new Viatge(idOrigen,idDesti,dateTime,idTransport,habilitat);
                     dao.createViatge(nouViatge,con);
+                    System.out.println("Entra el preu del bitllet");
+                    double preuN = lec.nextDouble();
+                    lec.nextLine();
+                    dao.createBitllet(new Bitllet(preuN,1,nouViatge.getIdViatge()),con);
                     break;
                 case 3:
-                    ArrayList<Viatge> viatgeLlista = dao.TotsVia(con);
                     imprimirViatges();
                     System.out.print("Entra l'ID del viatge que vols deshabilitar/habilitar: ");
                     int id = lec.nextInt();
@@ -161,7 +164,7 @@ public static void menuAdmin(){
                     break;
                 case 4:
                     imprimirViatges();
-                    System.out.println("\t[1] Canviar origen\n\t[2] Canviar destí\n\t[3] Canviar data\n\t[4] Canviar transport");
+                    System.out.println("\t[1] Canviar origen\n\t[2] Canviar destí\n\t[3] Canviar data\n\t[4] Canviar transport\n\t[5] Esborrar viatge");
                     int canviarViatge = lec.nextInt();
                     lec.nextLine();
                     switch (canviarViatge){
@@ -246,6 +249,20 @@ public static void menuAdmin(){
                             }while (!trobat);
                             vT.setIdTransport(idTransport);
                             dao.updateViatge(vT,con);
+                            break;
+                        case 5:
+                            System.out.println("Entra l'ID del viatge que vols esborrar ");
+                            int idE = lec.nextInt();
+                            lec.nextLine();
+                            ArrayList<Bitllet> bitllets = dao.TotsBit(con);
+                            boolean trobatB = false;
+                            int i=0;
+                            while (!trobatB && i< bitllets.size()){
+                                if (bitllets.get(i).getIdViatge()==idE) trobatB = true;
+                                else i++;
+                            }
+                            dao.deleteViatge(dao.cercaViatge(idE,con),con);
+                            dao.deleteBitllet(dao.cercaBitllet(bitllets.get(i).getId(),con),con);
 
                     }
             }
@@ -256,7 +273,7 @@ public static void menuUser(Client c){
 
     int opcio;
     do{
-        System.out.println("\t[1] Visualitza viatges per  \n\t[2] Comprar  bitllets \n\t[3] Editar els teus viatges");
+        System.out.println("\t[1] Visualitza viatges \n\t[2] Comprar  bitllets \n\t[3] Editar els teus bitllets");
 
         opcio=lec.nextInt();
         lec.nextLine();
@@ -267,19 +284,19 @@ public static void menuUser(Client c){
                 System.out.println("Introdueix la teva ciutat de sortida");
                 origen=lec.nextLine();
                 for(Viatge v:viatgeList){
-                    if (dao.cercaLocalitat(v.getIdOrigen(),con).getNom().equalsIgnoreCase(origen) && LocalDateTime.now().isBefore(v.getDataHora())) {
+                    if (dao.cercaLocalitat(v.getIdOrigen(),con).getNom().equalsIgnoreCase(origen) && LocalDateTime.now().isBefore(v.getDataHora()) && v.isHabilitat()) {
                         System.out.println("\n---------------");
                         System.out.println(dao.cercaTransport(v.getIdTransport(), con).getNom());
-                        System.out.print(v.getIdOrigen() + " ---> " + v.getIdDesti());
-                        System.out.print(v.getDataHora());
-                        System.out.println("Copia aquest codi per comprar bitllets d'aquest viatge: "+v.getIdViatge());
+                        System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom() + " ---> " + dao.cercaLocalitat(v.getIdDesti(),con).getNom());
+                        System.out.println("     "+v.getDataHora());
+                        System.out.println("Per comprar bitllets d'aquest viatge copia aquest codi: "+v.getIdViatge());
                     }
                 }
                 break;
             case 2:
                 int codi=0;
-                System.out.println("Enganxa el codi que ha copiat: ");
-               codi= lec.nextInt();
+                System.out.println("Enganxa el codi que has copiat: ");
+                codi= lec.nextInt();
                 lec.nextLine();
 
                 ArrayList<Bitllet>bitllets=dao.TotsBit(con);
@@ -417,12 +434,6 @@ public static void menuUser(Client c){
                                 System.out.println("No hi ha tants bitlllets disponibles");
 
                             }
-
-
-
-
-
-
 
                  }
 
