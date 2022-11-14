@@ -87,7 +87,7 @@ public class Implementacions implements DAO {
     public boolean deleteClient(Client cli, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Delete from client where id_client="+cli.getId());
+            stmt.executeUpdate("Delete from client where id_client="+cli.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -155,7 +155,7 @@ public class Implementacions implements DAO {
     public boolean deleteBitllet(Bitllet bit, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Delete from bitllets where id_bitllet="+bit.getId());
+            stmt.executeUpdate("Delete from bitllets where id_bitllet="+bit.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -223,7 +223,7 @@ public class Implementacions implements DAO {
     public boolean deleteCompra(Compra com, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Delete from compres where id_bitllet="+com.getIdBitllet()+" AND id_viatge= "+com.getIdViatge());
+            stmt.executeUpdate("Delete from compres where id_bitllet="+com.getIdBitllet()+" AND id_viatge= "+com.getIdViatge());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -291,7 +291,7 @@ public class Implementacions implements DAO {
     public boolean deleteEquipatge(Equipatge equ, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Delete from equipatge where id_equipatge="+equ.getId());
+            stmt.executeUpdate("Delete from equipatge where id_equipatge="+equ.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -358,7 +358,7 @@ public class Implementacions implements DAO {
     public boolean deleteFacEquipatge(FacEquip feq, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Delete from factura_equipatge where id_factura="+feq.getId());
+            stmt.executeUpdate("Delete from factura_equipatge where id_factura="+feq.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -426,7 +426,7 @@ public class Implementacions implements DAO {
     public boolean deleteLocalitat(Localitat loc, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Delete from localitats where id_localitat="+loc.getId());
+           stmt.executeUpdate("Delete from localitats where id_localitat="+loc.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -494,7 +494,7 @@ public class Implementacions implements DAO {
     public boolean deleteTransport(Transport tra, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Delete from transport where id_transport="+tra.getId()+"");
+            stmt.executeUpdate("Delete from transport where id_transport="+tra.getId()+"");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -561,7 +561,7 @@ public class Implementacions implements DAO {
     public boolean deleteViatge(Viatge via, Connection con) {
         try {
             Statement stmt=con.createStatement();
-            ResultSet rs= stmt.executeQuery("Delete from viatge where id_viatge="+via.getIdViatge()+"");
+            stmt.executeUpdate("Delete from viatge where id_viatge="+via.getIdViatge()+"");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

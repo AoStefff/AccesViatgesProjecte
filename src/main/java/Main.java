@@ -29,51 +29,64 @@ public class Main {
         Scanner lec=new Scanner(System.in);
 
         int opcio = 0;
-       do{
+       do {
            System.out.println("\t[1] Iniciar sessió\n\t[2] Registrar");
-           opcio=lec.nextInt();
+           opcio = lec.nextInt();
            lec.nextLine();
-           switch (opcio){
+           switch (opcio) {
                case 1:
 
                    System.out.println("Dni del usuari: ");
-                   String dni=lec.nextLine();
-                      while(!userExist(dni)){
-                          System.out.println("No existeix l'usuari: ");
-                          dni=lec.nextLine();
-                      }
-                      System.out.println("Inici de sessió correcte");
-                     Client cli= dao.cercaClient(dni,con);
-                     if(cli.isAdmin()){
-                         menuAdmin();
-                     }
-                     else{
-                         menuUser(cli);
-                     }
+                   String dni = lec.nextLine();
+                   boolean trobat = false;
+                   int num = 0;
+                   while (!trobat) {
+                       if (dao.TotsCli(con).get(num).getDni().equals(dni)) {
+                           System.out.println("No existeix l'usuari: ");
+                           dni = lec.nextLine();
+                       }
+                   }
+                   System.out.println("Inici de sessió correcte");
+                   Client cli = dao.cercaClient(dni, con);
+                   if (cli.isAdmin()) {
+                       menuAdmin();
+                   } else {
+                       menuUser(cli);
+                   }
                    break;
 
 
-                     case 2:
+               case 2:
                    System.out.println("Formulari de registre\n");
                    System.out.println("Nom:");
-                   String nom=lec.nextLine();
+                   String nom = lec.nextLine();
                    System.out.println("Dni: ");
-                   dni=lec.nextLine();
+                   dni = lec.nextLine();
                    System.out.println("Data de Naixament (DD-MM-AAAA)");
-                   String data=lec.nextLine();
+                   String data = lec.nextLine();
                    System.out.println("Email: ");
-                   String email=lec.next();
+                   String email = lec.next();
                    System.out.println("Telefon: ");
-                   String telefon=lec.next();
-                   while(userExist(dni)){
-                       System.out.println("Dni del usuari: ");
-                       dni=lec.nextLine();
+                   String telefon = lec.next();
+                   String[] dataa = data.split("-");
+
+                   boolean find = false;
+                   for (Client c : dao.TotsCli(con)) {
+                       if (dni.equals(c.getDni())) {
+                           find = true;
+                       }
+
+
                    }
-                   String []dataa=data.split("-");
-                   Client c=new Client(dni,nom,LocalDate.of(Integer.parseInt(dataa[2]),Integer.parseInt(dataa[1]),Integer.parseInt(dataa[0])),telefon,email,false);
-                   dao.createClient(c,con);
+
+                   if (!find) {
+                       Client c = new Client(dni, nom, LocalDate.of(Integer.parseInt(dataa[2]), Integer.parseInt(dataa[1]), Integer.parseInt(dataa[0])), telefon, email, false);
+                       dao.createClient(c, con);
+                   } else {
+                       System.out.print("Ja existeix aquest usuari");
+                   }
            }
-        }
+       }
         while(opcio!=0);
 
     }
@@ -231,7 +244,7 @@ public static void menuUser(Client c){
                             int q=lec.nextInt();
                             lec.nextLine();
                             if(q<=dispo){
-                               System.out.println(b.getPreu()*q);
+                               System.out.println("Total sense equipatge: "+b.getPreu()*q+" €");
                                for (int j=0;j<q;j++){
                                    System.out.println("Introdueix el nom del passatger");
                                    String nom=lec.nextLine();
@@ -262,6 +275,9 @@ public static void menuUser(Client c){
                                                   fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
                                                    dao.createFacEquipatge(fe,con);
                                                     com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
+
+
+
 
                                                case 2:
                                                    System.out.println("Tria una maleta: \n");
@@ -322,40 +338,5 @@ public static void menuUser(Client c){
     }while (opcio!=0);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static boolean userExist(String d){
-        Client c= dao.cercaClient(d,con);
-        if (c.getDni().equals(d)){
-            return true;
-        }else{
-            return false;
-
-        }
-
-
     }
-}
+
