@@ -259,7 +259,22 @@ public static void menuUser(Client c){
                                        lec.nextLine();
                                             int mal=0;
                                        FacEquip fe=new FacEquip();
-                                           int quant=lec.nextInt();
+                                       Equipatge eq=new Equipatge();
+                                       double pesPas=0;
+                                      ArrayList <FacEquip>auxFacEquips= dao.TotsFequip(con);
+                                      ArrayList<FacEquip>facEquips=new ArrayList<>();
+                                      for(int d=0;d<auxFacEquips.size();d++){
+                                          if(auxFacEquips.get(d).getIdVia()==v.getIdViatge()){
+                                              facEquips.add(dao.cercaFacEquipatge(auxFacEquips.get(d).getId(),con));
+                                          }
+                                      }
+                                      double pest=0;
+                                      for(int f=0;f<facEquips.size();f++){
+
+                                          pest=pest+dao.cercaEquipatge(facEquips.get(f).getIdEqui(),con).getPes();
+
+                                      }
+                                       int quant=lec.nextInt();
                                            lec.nextInt();
                                            switch (quant){
                                                case 3:
@@ -273,7 +288,15 @@ public static void menuUser(Client c){
                                                    dao.createFacEquipatge(fe,con);
                                                     com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
 
-                                               case 2:
+                                                     eq=dao.cercaEquipatge(mal,con);
+                                                   pesPas=eq.getPes();
+                                                   if(pest+pesPas<dao.cercaTransport(v.getIdTransport(),con).getMaxPes()){
+                                                       pest=pest+pesPas;
+                                                   }
+                                                   else{
+                                                       System.out.println("Supera el pes maxim del transport");
+                                                   }
+                                                   case 2:
                                                    System.out.println("Tria una maleta: \n");
                                                    for(Equipatge e:equips) {
                                                        System.out.println(e.getId() + " - " + e.getNom());
@@ -285,6 +308,10 @@ public static void menuUser(Client c){
                                                   fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
                                                    dao.createFacEquipatge(fe,con);
                                                    com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
+                                                   pesPas=eq.getPes();
+                                                   if(pest+pesPas<dao.cercaTransport(v.getIdTransport(),con).getMaxPes()){
+                                                       pest=pest+pesPas;
+                                                   }
 
                                                case 1:
                                                    System.out.println("Tria una maleta: \n");
@@ -296,6 +323,10 @@ public static void menuUser(Client c){
                                                    fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
                                                    dao.createFacEquipatge(fe,con);
                                                    com.setPreu(com.getPreu()+dao.cercaEquipatge(mal,con).getPreu());
+                                                   pesPas=eq.getPes();
+                                                   if(pest+pesPas<dao.cercaTransport(v.getIdTransport(),con).getMaxPes()){
+                                                       pest=pest+pesPas;
+                                                   }
 
                                            }
                                            dao.createCompra(com,con);

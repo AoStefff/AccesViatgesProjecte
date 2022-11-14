@@ -19,6 +19,10 @@ public class Equipatge {
         this.preu=preu;
     }
 
+    public Equipatge() {
+
+    }
+
     public int getId() {
         return id;
     }
