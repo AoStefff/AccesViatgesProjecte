@@ -18,7 +18,7 @@ public class Main {
 
     static {
         try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/agencia_viatges","postgres","1234");
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/agencia_viatges","postgres","mcgastron99");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +39,7 @@ public class Main {
                    System.out.println("Dni del usuari: ");
                    String dni=lec.nextLine();
                       while(!userExist(dni)){
-                          System.out.println("No existeix l'usuari: ");
+                          System.out.println("No existeix l'usuari. Torna a introduir-lo. ");
                           dni=lec.nextLine();
                       }
                       System.out.println("Inici de sessió correcte");
@@ -95,8 +95,8 @@ public static void menuAdmin(){
                     for(Viatge v:viatgeList){
                         System.out.println("\n---------------");
                         System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
-                        System.out.print(v.getIdOrigen()+" ---> "+v.getIdDesti());
-                        System.out.print(v.getDataHora());
+                        System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom()+" ---> "+dao.cercaLocalitat(v.getIdDesti(),con).getNom());
+                        System.out.println("      "+v.getDataHora());
 
                     }
                     break;
@@ -107,12 +107,12 @@ public static void menuAdmin(){
                     int idDesti=0;
                     int idTransport=0;
                     boolean trobat = false;
-                    int i=0;
                     do{
+                        int i=0;
                         System.out.print("Entra l'origen del viatge: ");
-                        String origen = lec.nextLine().toLowerCase();
+                        String origen = lec.nextLine();
                         while (!trobat && i<localitats.size()){
-                            if (localitats.get(i).getNom().toLowerCase().equals(origen))  {
+                            if (localitats.get(i).getNom().equalsIgnoreCase(origen))  {
                                 trobat=true;
                                 idOrigen = localitats.get(i).getId();
                             }
@@ -120,12 +120,12 @@ public static void menuAdmin(){
                         }
                     }while (!trobat);
                     trobat = false;
-                    i=0;
                     do{
+                        int i=0;
                         System.out.print("Entra el destí del viatge: ");
-                        String desti = lec.nextLine().toLowerCase();
+                        String desti = lec.nextLine();
                         while (!trobat && i<localitats.size()){
-                            if (localitats.get(i).getNom().toLowerCase().equals(desti)) {
+                            if (localitats.get(i).getNom().equalsIgnoreCase(desti)) {
                                 idDesti = localitats.get(i).getId();
                                 trobat=true;
                             }
@@ -136,14 +136,14 @@ public static void menuAdmin(){
                     String [] data = lec.nextLine().split("-");
                     System.out.println("Entra l'hora 'HH:MM' del viatge");
                     String [] hora =lec.nextLine().split(":");
-                    LocalDateTime dateTime = LocalDateTime.of(LocalDate.of(Integer.parseInt(data[0]),Integer.parseInt(data[1]),Integer.parseInt(data[2])),LocalTime.of(Integer.parseInt(hora[0]),Integer.parseInt(hora[1])));
+                    LocalDateTime dateTime = LocalDateTime.of(LocalDate.of(Integer.parseInt(data[2]),Integer.parseInt(data[1]),Integer.parseInt(data[0])),LocalTime.of(Integer.parseInt(hora[0]),Integer.parseInt(hora[1])));
                     trobat = false;
-                    i=0;
                     do{
+                        int i=0;
                         System.out.print("Entra el transport del viatge: ");
-                        String transport = lec.nextLine().toLowerCase();
-                        while (!trobat && i<localitats.size()){
-                            if (localitats.get(i).getNom().toLowerCase().equals(transport)) {
+                        String transport = lec.nextLine();
+                        while (!trobat && i<transports.size()){
+                            if (transports.get(i).getNom().equalsIgnoreCase(transport)) {
                                 trobat=true;
                                 idTransport = localitats.get(i).getId();
                             }
@@ -159,13 +159,15 @@ public static void menuAdmin(){
                     for(Viatge v:viatgeLlista){
                         System.out.println("\n---------------");
                         System.out.println(dao.cercaTransport(v.getIdTransport(),con).getNom());
-                        System.out.print(v.getIdOrigen()+" ---> "+v.getIdDesti());
-                        System.out.print("      "+v.getDataHora()+"       "+v.getIdViatge());
+                        System.out.print(dao.cercaLocalitat(v.getIdOrigen(),con).getNom()+" ---> "+dao.cercaLocalitat(v.getIdDesti(),con).getNom());
+                        System.out.println("      "+v.getDataHora()+"       ID: "+v.getIdViatge());
                     }
-                    System.out.print("Entra la id de viatge que vols esborrar: ");
+                    System.out.print("Entra la id de viatge que vols deshabilitar: ");
                     int id = lec.nextInt();
                     lec.nextLine();
-                    dao.deleteViatge(dao.cercaViatge(id,con),con);
+                    Viatge v = dao.cercaViatge(id,con);
+                    v.setHabilitat(false);
+                    dao.updateViatge(v,con);
                     break;
             }
     }while(opcio!=0);
