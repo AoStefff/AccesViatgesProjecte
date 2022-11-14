@@ -179,8 +179,57 @@ public static void menuUser(Client c){
                                    System.out.println("Portarà maletes? (S/N)");
                                    resp=lec.nextLine();
                                    if (resp.equalsIgnoreCase("S")){
+                                       Compra com=new Compra(b.getId(),v.getIdViatge(),c.getId(),LocalDate.now(),b.getPreu(),nom,dni);
+
+                                       ArrayList<Equipatge>equips=dao.TotsEquip(con);
+                                       System.out.println("Quantes maletes portarà? Maxim 3 per persona");
+                                       q=lec.nextInt();
+                                       lec.nextLine();
+                                            int mal=0;
+                                       FacEquip fe=new FacEquip();
+                                           int quant=lec.nextInt();
+                                           lec.nextInt();
+                                           switch (quant){
+                                               case 3:
+                                                   System.out.println("Tria una maleta: \n");
+                                                   for(Equipatge e:equips) {
+                                                       System.out.println(e.getId() + " - " + e.getNom());
+                                                   }
+                                                    mal=lec.nextInt();
+                                                   lec.nextLine();
+
+                                                  fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
+                                                   dao.createFacEquipatge(fe,con);
+
+                                               case 2:
+                                                   System.out.println("Tria una maleta: \n");
+                                                   for(Equipatge e:equips) {
+                                                       System.out.println(e.getId() + " - " + e.getNom());
+                                                   }
+                                                    mal=lec.nextInt();
+                                                   lec.nextLine();
+
+
+                                                  fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
+                                                   dao.createFacEquipatge(fe,con);
+
+                                               case 1:
+                                                   System.out.println("Tria una maleta: \n");
+                                                   for(Equipatge e:equips) {
+                                                       System.out.println(e.getId() + " - " + e.getNom());
+                                                   }
+                                                   mal=lec.nextInt();
+                                                   lec.nextLine();
+                                                   fe=new FacEquip(v.getIdViatge(),c.getId(),mal);
+                                                   dao.createFacEquipatge(fe,con);
+                                           }
+
                                        //Cear maletes MAX 3
                                        //Per maleta
+                                   }
+                                   else{
+                                       Compra com=new Compra(b.getId(),v.getIdViatge(),c.getId(),LocalDate.now(),b.getPreu(),nom,dni);
+
                                    }
 
                                }

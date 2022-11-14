@@ -16,6 +16,15 @@ public class Compra {
     public Compra() {
     }
 
+    public Compra(int idBitllet, int idViatge, int idClient, LocalDate dataCompra, double preu, String nomPassatger, String dniPassatger) {
+        this.idBitllet = idBitllet;
+        this.idViatge = idViatge;
+        this.idClient = idClient;
+        this.dataCompra = dataCompra;
+        this.preu = preu;
+        this.nomPassatger = nomPassatger;
+        this.dniPassatger = dniPassatger;
+    }
     public Compra(int idCompra,int idBitllet, int idViatge, int idClient, LocalDate dataCompra, double preu, String nomPassatger, String dniPassatger) {
         this.idCompra=idCompra;
         this.idBitllet = idBitllet;
