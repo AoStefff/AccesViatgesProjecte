@@ -263,9 +263,8 @@ public static void menuAdmin(){
                                 if (bitllets.get(i).getIdViatge()==idE) trobatB = true;
                                 else i++;
                             }
-                            dao.deleteBitllet(dao.cercaBitllet(bitllets.get(i).getId(),con),con);
                             dao.deleteViatge(dao.cercaViatge(idE,con),con);
-
+                            dao.deleteBitllet(dao.cercaBitllet(bitllets.get(i).getId(),con),con);
                     }
             }
     }while(opcio!=0);
