@@ -324,7 +324,7 @@ public static void menuUser(Client c){
                      }
                  }
                  System.out.println("Actualment queden "+dispo+" bitllets disponibles");
-                 System.out.println("Preu per bitllet "+b.getPreu());
+                 System.out.println("Preu per bitllet "+b.getPreu()+"€");
                  System.out.println("Vols comprar-ne? (S/N)");
                  String resp="";
                  resp=lec.next();
@@ -333,7 +333,7 @@ public static void menuUser(Client c){
                             int qB=lec.nextInt();
                             lec.nextLine();
                             if(qB<=dispo){
-                               System.out.println(b.getPreu()*qB);
+                               System.out.println(b.getPreu()*qB+"€");
                                for (int j=0;j<qB;j++){
                                    double pest=0;
                                    System.out.println("Introdueix el nom del passatger");
@@ -353,7 +353,7 @@ public static void menuUser(Client c){
                                            for (int k=0;k<quant;k++){
                                                System.out.println("Tria una maleta: \n");
                                                for(Equipatge e:equips) {
-                                                   System.out.println(e.getId() + " - " + e.getNom());
+                                                   System.out.println(e.getId() + " - " + e.getNom()+"    "+e.getPreu()+"€");
                                                }
                                                int mal=lec.nextInt();
                                                lec.nextLine();
@@ -399,7 +399,7 @@ public static void menuUser(Client c){
                         }
                         for (Compra com:compraC){
                             System.out.print(dao.cercaLocalitat(dao.cercaViatge(com.getIdViatge(),con).getIdOrigen(),con).getNom()+"------>"+dao.cercaLocalitat(dao.cercaViatge(com.getIdViatge(),con).getIdDesti(),con).getNom());
-                            System.out.println("     ID: "+com.getIdCompra());
+                            System.out.println("     ID: "+com.getIdCompra()+"     "+com.getNomPassatger());
                         }
                         System.out.println("Entra la ID per esborrar la compra");
                         int idE = lec.nextInt();
@@ -443,7 +443,7 @@ public static void menuUser(Client c){
                             System.out.println("Tria una maleta: \n");
                             ArrayList<Equipatge>equips=dao.TotsEquip(con);
                             for(Equipatge e:equips) {
-                                System.out.println(e.getId() + " - " + e.getNom());
+                                System.out.println(e.getId() + " - " + e.getNom()+ "    "+e.getPreu()+"€");
                             }
                             int mal=lec.nextInt();
                             lec.nextLine();
